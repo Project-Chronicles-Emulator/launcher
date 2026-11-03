@@ -24,7 +24,9 @@ $binary = Join-Path $BuildDirectory 'bin/Release/launcher'
 foreach ($filename in @('chronicles-launcher.exe', 'chronicles-world-tls-local.exe', 'chronicles-zone-unlock.exe')) {
     Copy-Required "$binary/$filename"
 }
-Get-ChildItem -LiteralPath $binary -Filter '*.dll' -File | Copy-Item -Destination $package
+Get-ChildItem -LiteralPath $binary -Filter '*.dll' -File |
+    Where-Object { $_.Name -notlike 'gtest*' } |
+    Copy-Item -Destination $package
 Copy-Required 'launcher/web'
 Copy-Required 'launcher/resources'
 Copy-Required 'config/launcher.local.example.json' "$package/launcher-config.json"
