@@ -1,0 +1,56 @@
+{
+  "release_version": "0.2.0",
+  "release_sequence": 2,
+  "files": [
+    {
+      "path": "X5/Binaries/Win64/concrt140.dll",
+      "sha256": "54716f0738af891f283d213b5c8d11b25896bb8ee3097d301eae718560cf974e",
+      "size": 374200
+    },
+    {
+      "path": "X5/Binaries/Win64/msvcp140.dll",
+      "sha256": "7c26614e1d733892c2deac7e245ce115504b1d80592dd0a01b08e3e5a55f89ca",
+      "size": 643512
+    },
+    {
+      "path": "X5/Binaries/Win64/msvcp140_1.dll",
+      "sha256": "206c931bf90fdad8816de3b5e2ef80b2bcaa9406c89ecc05fe6fddffe251e982",
+      "size": 35768
+    },
+    {
+      "path": "X5/Binaries/Win64/msvcp140_2.dll",
+      "sha256": "d50d7883f20d1dc6191768d3746f52dd9cac89c346ffaed5be1f110c2f34a838",
+      "size": 274872
+    },
+    {
+      "path": "X5/Binaries/Win64/msvcp140_atomic_wait.dll",
+      "sha256": "3d0cbfaa1bf3eecf5a3f4491d2960ee803cb994f30292c6adc4a07c498f60e2b",
+      "size": 57792
+    },
+    {
+      "path": "X5/Binaries/Win64/msvcp140_codecvt_ids.dll",
+      "sha256": "8a65c7596ef2e6938731f5a1058e7e40145b6d97967cc649231a076b9a608d78",
+      "size": 31160
+    },
+    {
+      "path": "X5/Binaries/Win64/vccorlib140.dll",
+      "sha256": "09f93d5ff96ae09767f3e1af3cdd43a5a58f2598654fc63089429bb6f9f4737f",
+      "size": 350648
+    },
+    {
+      "path": "X5/Binaries/Win64/vcruntime140.dll",
+      "sha256": "d1f4225df2cd877dbf130d5668a021dce3f94118455ff5ec952061c30afc9ce7",
+      "size": 178616
+    },
+    {
+      "path": "X5/Binaries/Win64/vcruntime140_1.dll",
+      "sha256": "a7146c08f89fe5b04541ab507cdb59ff7b44534d4ba3c668a426c6450a03434e",
+      "size": 50112
+    },
+    {
+      "path": "X5/Binaries/Win64/vcruntime140_threads.dll",
+      "sha256": "40f39e8cee5f5a531b4010e18b807e8fe265b908dc58f959ecb7ebc6ea6cb11a",
+      "size": 38840
+    }
+  ]
+}

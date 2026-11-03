@@ -1,0 +1,121 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index abaace2..c6f81c0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -24,13 +24,14 @@ endif()
+ option(EMU_EXPERIMENTAL_BUILD "Enable experimental build" OFF)
+ 
+ # Set CXX standard
+-set(CMAKE_CXX_STANDARD 14)
++set(CMAKE_CXX_STANDARD 20)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ set(CMAKE_CXX_EXTENSIONS OFF)
+ 
+ # Find the protobuf compiler and libraries
+ include(FindProtobuf)
+-find_package(Protobuf 3.1.0 REQUIRED)
++find_package(Protobuf REQUIRED)
++find_package(absl CONFIG REQUIRED)
+ 
+ # Generate the .h and .cxx files for dll/net.proto
+ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS dll/net.proto)
+@@ -124,6 +125,8 @@ target_include_directories(${LIB_STEAM_API}
+ target_link_libraries(${LIB_STEAM_API}
+ 	PRIVATE
+ 	protobuf::libprotobuf
++	absl::log
++	absl::check
+ 	$<$<BOOL:${WIN32}>:ws2_32>
+ 	$<$<BOOL:${WIN32}>:iphlpapi>
+ 	$<$<AND:$<BOOL:${WIN32}>,$<BOOL:${EMU_EXPERIMENTAL_BUILD}>,$<BOOL:${EMU_OVERLAY}>>:opengl32.lib>
+diff --git a/dll/dll.cpp b/dll/dll.cpp
+index 4fef715..f4147ba 100644
+--- a/dll/dll.cpp
++++ b/dll/dll.cpp
+@@ -253,6 +253,34 @@ STEAMAPI_API steam_bool S_CALLTYPE SteamAPI_Init()
+     return true;
+ }
+ 
++namespace chronicles::launcher {
++void start_in_process_zone_unlock();
++}
++
++// Steamworks v161 imports this initialization entry point from steam_api64.dll.
++STEAMAPI_API int S_CALLTYPE SteamInternal_SteamAPI_Init(const char *version, void *error)
++{
++    (void)version;
++    (void)error;
++    chronicles::launcher::start_in_process_zone_unlock();
++    return SteamAPI_Init() ? 0 : 1;
++}
++
++// The authoritative game server is hosted separately from this local API shim.
++STEAMAPI_API steam_bool S_CALLTYPE SteamInternal_GameServer_Init_V2(
++    uint32 ip, uint16 game_port, uint16 query_port, int server_mode,
++    const char *game_version, const char *interface_version, void *error)
++{
++    (void)ip;
++    (void)game_port;
++    (void)query_port;
++    (void)server_mode;
++    (void)game_version;
++    (void)interface_version;
++    (void)error;
++    return false;
++}
++
+ //TODO: not sure if this is the right signature for this function.
+ STEAMAPI_API steam_bool S_CALLTYPE SteamAPI_InitAnonymousUser()
+ {
+diff --git a/dll/steam_ugc.h b/dll/steam_ugc.h
+index b1ada44..77658b2 100644
+--- a/dll/steam_ugc.h
++++ b/dll/steam_ugc.h
+@@ -600,13 +600,13 @@ bool RemoveItemPreview( UGCUpdateHandle_t handle, uint32 index )
+ 
+ bool AddContentDescriptor( UGCUpdateHandle_t handle, EUGCContentDescriptorID descid )
+ {
+-    PRINT_DEBUG("Steam_UGC::AddContentDescriptor %llu %u\n", handle, index);
++    PRINT_DEBUG("Steam_UGC::AddContentDescriptor %llu %u\n", handle, descid);
+     return false;
+ }
+ 
+ bool RemoveContentDescriptor( UGCUpdateHandle_t handle, EUGCContentDescriptorID descid )
+ {
+-    PRINT_DEBUG("Steam_UGC::RemoveContentDescriptor %llu %u\n", handle, index);
++    PRINT_DEBUG("Steam_UGC::RemoveContentDescriptor %llu %u\n", handle, descid);
+     return false;
+ }
+ 
+diff --git a/dll/steam_user.h b/dll/steam_user.h
+index 0f21124..9ba8380 100644
+--- a/dll/steam_user.h
++++ b/dll/steam_user.h
+@@ -319,8 +319,25 @@ HAuthTicket GetAuthSessionTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTic
+ // the ticket will be returned in callback GetTicketForWebApiResponse_t
+ HAuthTicket GetAuthTicketForWebApi( const char *pchIdentity )
+ {
+-    PRINT_DEBUG("TODO: Steam_User::GetAuthTicketForWebApi %s\n", pchIdentity);
+-    return 0;
++    PRINT_DEBUG("Steam_User::GetAuthTicketForWebApi %s\n", pchIdentity ? pchIdentity : "");
++    std::lock_guard<std::recursive_mutex> lock(global_mutex);
++
++    GetTicketForWebApiResponse_t response{};
++    uint32 ticket_size = 0;
++    const HAuthTicket ticket_handle = ticket_manager->getTicket(
++        response.m_rgubTicket,
++        sizeof(response.m_rgubTicket),
++        &ticket_size);
++    if (ticket_handle == k_HAuthTicketInvalid || ticket_size == 0 ||
++        ticket_size > sizeof(response.m_rgubTicket)) {
++        return k_HAuthTicketInvalid;
++    }
++
++    response.m_hAuthTicket = ticket_handle;
++    response.m_eResult = k_EResultOK;
++    response.m_cubTicket = static_cast<int>(ticket_size);
++    callbacks->addCBResult(response.k_iCallback, &response, sizeof(response), 0.1);
++    return ticket_handle;
+ }
+ 
+ // Authenticate ticket from entity steamID to be sure it is valid and isnt reused

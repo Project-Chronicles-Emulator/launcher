@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <title>Project Chronicles Launcher</title>
+    <link
+      rel="preload"
+      href="assets/fonts/InterVariable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="assets/fonts/Cinzel-Variable.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link rel="stylesheet" href="app.css?v=11" />
+  </head>
+  <body class="loading">
+    <svg class="svg-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="compass" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="22" />
+        <circle cx="32" cy="32" r="18" />
+        <path d="m32 2 5 25 25 5-25 5-5 25-5-25-25-5 25-5Z" />
+        <path d="m15 15 17 12 17-12-12 17 12 17-17-12-17 12 12-17Z" />
+      </symbol>
+    </svg>
+    <div class="launcher">
+      <header class="titlebar" id="titlebar">
+        <button class="brand-button" data-view="play" aria-label="Project Chronicles home">
+          <svg class="compass"><use href="#compass" /></svg>
+        </button>
+        <nav class="top-nav" aria-label="Main navigation">
+          <button class="nav-item active" data-view="play" aria-current="page">Home</button>
+          <button class="nav-item" data-view="news">News</button>
+          <button class="nav-item" data-view="store">Store</button>
+          <button class="nav-item" data-view="characters">Characters</button>
+          <button class="nav-item" data-view="community">Community</button>
+          <button class="nav-item" data-view="settings">Settings</button>
+        </nav>
+        <div class="window-drag" id="windowDrag" title="Drag to move window"></div>
+        <button
+          class="icon-button notification-button development-only"
+          data-view="logs"
+          aria-label="Launcher activity"
+        >
+          <span data-icon="bell"></span>
+          <span class="notification-dot" id="notificationDot" hidden></span>
+        </button>
+        <button class="profile-button" id="accountButton" aria-label="Account and sign in">
+          <span class="profile-emblem" id="profileEmblem" aria-hidden="true">◇</span>
+          <span class="profile-copy">
+            <strong id="profileName">Sign in</strong>
+            <small>
+              <span class="account-status-dot" id="profileStatusDot"></span>
+              <span id="profileStatus">Signed out</span>
+            </small>
+          </span>
+          <span class="profile-chevron">⌄</span>
+        </button>
+        <div class="window-controls">
+          <button
+            data-window="minimize"
+            aria-label="Minimize to system tray"
+            title="Minimize to system tray"
+          >
+            ―
+          </button>
+          <button data-window="maximize" aria-label="Maximize or restore">□</button>
+          <button data-window="close" class="close-window" aria-label="Close launcher">×</button>
+        </div>
+      </header>
+      <aside class="sidebar" aria-label="Quick navigation">
+        <nav>
+          <button class="nav-item active" data-view="play" aria-label="Home" aria-current="page">
+            <span data-icon="home"></span>
+            <span>Home</span>
+          </button>
+          <button class="nav-item" data-view="news" aria-label="News">
+            <span data-icon="news"></span>
+            <span>News</span>
+          </button>
+          <button class="nav-item" data-view="store" aria-label="Store">
+            <span data-icon="cart"></span>
+            <span>Store</span>
+          </button>
+          <button class="nav-item" data-view="characters" aria-label="Characters">
+            <span data-icon="users"></span>
+            <span>Characters</span>
+          </button>
+          <button class="nav-item" data-view="community" aria-label="Community">
+            <span data-icon="globe"></span>
+            <span>Community</span>
+          </button>
+          <button class="nav-item" data-view="settings" aria-label="Settings">
+            <span data-icon="sliders"></span>
+            <span>Settings</span>
+          </button>
+        </nav>
+        <div class="sidebar-ornament">
+          <span></span>
+          <svg class="compass"><use href="#compass" /></svg>
+          <span></span>
+        </div>
+        <span class="sidebar-version">ALPHA 0.2</span>
+      </aside>
+      <main class="main">
+        <section class="view active home-view" id="view-play" aria-label="Home">
+          <div class="hero-scene">
+            <div class="game-brand">
+              <div class="brand-crown">
+                <span></span>
+                <svg class="compass"><use href="#compass" /></svg>
+                <span></span>
+              </div>
+              <p class="brand-kicker">ARCHEAGE</p>
+              <h1>Project Chronicles</h1>
+              <div class="brand-rule">
+                <span></span>
+                <b>◆</b>
+                <span></span>
+              </div>
+              <p class="brand-tagline">A larger world awaits</p>
+            </div>
+            <div class="hero-invitation">
+              Explore
+              <br />
+              Discover
+              <br />
+              <em>Belong</em>
+              <span>── ◆ ──</span>
+            </div>
+            <div class="hero-caption">
+              <span class="small-diamond">◆</span>
+              YOUR NEXT CHAPTER STARTS HERE
+            </div>
+            <aside class="realm-panel" aria-label="Realm status">
+              <div class="realm-heading">
+                <span class="status-dot" id="realmDot"></span>
+                <strong id="realmName">Project Chronicles Private Server</strong>
+                <span data-icon="signal"></span>
+              </div>
+              <div class="realm-row">
+                <span>Connection</span>
+                <strong id="realmStatus">Checking…</strong>
+              </div>
+              <div class="realm-row">
+                <span>Population</span>
+                <strong id="realmPopulation">—</strong>
+              </div>
+              <div class="realm-row">
+                <span>Selected region</span>
+                <strong id="realmRegion">—</strong>
+              </div>
+              <div class="realm-row" id="serverChoiceRow" hidden>
+                <label for="serverChoice">Server</label>
+                <select id="serverChoice" aria-label="Choose server"></select>
+              </div>
+              <div class="realm-row development-only">
+                <span>World service</span>
+                <strong id="realmWorld">Checking…</strong>
+              </div>
+              <button class="text-button" id="refreshButton">
+                Refresh status
+                <span>↻</span>
+              </button>
+            </aside>
+          </div>
+          <div class="launch-strip">
+            <button class="play-button" id="playButton" disabled>
+              <span data-icon="play" id="playIcon" aria-hidden="true"></span>
+              <span id="playLabel">PLAY</span>
+            </button>
+            <div class="launch-status" role="status" aria-live="polite">
+              <div class="launch-status-heading">
+                <strong id="launchHeadline">Preparing your adventure</strong>
+                <span class="build-label">CHRONICLES · ALPHA 0.2</span>
+              </div>
+              <div class="readiness-track" aria-hidden="true"><span id="readinessFill"></span></div>
+              <div class="launch-status-detail">
+                <span id="launchDetail">Connecting to the launcher…</span>
+                <button class="text-button" id="cancelUpdateButton" hidden>Cancel update</button>
+                <button class="text-button" data-view="settings" aria-label="Game settings">
+                  <span data-icon="sliders"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="news-heading">
+            <span>THE CHRONICLES DISPATCH</span>
+            <button class="text-button" data-view="news">
+              All news
+              <span>→</span>
+            </button>
+          </div>
+          <p class="news-status" id="homeNewsStatus" role="status">Loading the latest news…</p>
+          <div class="news-grid" id="homeNews"></div>
+          <footer class="home-footer">
+            <span>
+              <i class="status-dot" id="footerDot"></i>
+              <span id="footerStatus">Checking realm status</span>
+            </span>
+            <span>Where every journey becomes a story.</span>
+            <span>Launcher 0.2.6</span>
+          </footer>
+        </section>
+        <section class="view content-view" id="view-news" aria-labelledby="newsTitle">
+          <div class="page-heading">
+            <p class="eyebrow">THE CHRONICLES DISPATCH</p>
+            <h2 id="newsTitle">News & updates</h2>
+            <p>Follow the world we’re building.</p>
+            <button class="button" id="refreshNewsButton">Refresh news</button>
+          </div>
+          <p class="news-status" id="allNewsStatus" role="status">Loading the latest news…</p>
+          <div class="news-grid expanded-news" id="allNews"></div>
+        </section>
+        <section class="view content-view" id="view-store" aria-labelledby="storeTitle">
+          <div class="page-heading">
+            <p class="eyebrow">THE MARKETPLACE</p>
+            <h2 id="storeTitle">The Project Chronicles store</h2>
+            <p>Browse collections. Open the shop for details and checkout.</p>
+          </div>
+          <div class="portal-toolbar">
+            <input
+              id="storeSearch"
+              type="search"
+              placeholder="Find a collection…"
+              aria-label="Search store"
+            />
+            <select id="storeCategory" aria-label="Store category">
+              <option value="">All collections</option>
+            </select>
+            <button class="button" id="refreshStoreButton">Refresh catalog</button>
+          </div>
+          <p class="news-status" id="storeStatus" role="status">Loading the catalog…</p>
+          <div class="catalog-grid" id="storeCatalog"></div>
+        </section>
+        <section class="view content-view" id="view-characters" aria-labelledby="charactersTitle">
+          <div class="page-heading">
+            <p class="eyebrow">YOUR STORY</p>
+            <h2 id="charactersTitle">Your adventurers</h2>
+            <p>Continue a story, or begin a new one.</p>
+          </div>
+          <div class="portal-toolbar">
+            <div class="roster-account">
+              Account
+              <strong id="characterAccount">—</strong>
+            </div>
+            <button class="button" id="characterSignInButton">Sign in</button>
+            <button class="button" id="refreshCharactersButton">Refresh characters</button>
+            <button class="button primary" id="characterPlayButton">
+              Open character selection
+              <span>→</span>
+            </button>
+          </div>
+          <p class="news-status" id="charactersStatus" role="status">
+            Sign in to view your saved characters.
+          </p>
+          <div class="character-layout" id="characterLayout" hidden>
+            <div class="character-roster" id="characterRoster" aria-label="Saved characters"></div>
+            <article
+              class="character-detail"
+              id="characterDetail"
+              aria-label="Character details"
+            ></article>
+          </div>
+        </section>
+        <section class="view content-view" id="view-community" aria-labelledby="communityTitle">
+          <div class="page-heading">
+            <p class="eyebrow">BETTER TOGETHER</p>
+            <h2 id="communityTitle">Find your company</h2>
+            <p>Meet other adventurers, share your stories, and stay connected.</p>
+          </div>
+          <div class="portal-toolbar">
+            <button class="button" id="refreshCommunityButton">Refresh community</button>
+            <button class="text-button" data-view="news">Latest announcements →</button>
+          </div>
+          <p class="news-status" id="communityStatus" role="status">Loading community links…</p>
+          <div class="community-grid" id="communityLinks"></div>
+        </section>
+        <section class="view content-view development-only" id="view-tools">
+          <div class="page-heading">
+            <p class="eyebrow">ADVANCED</p>
+            <h2>Launcher diagnostics</h2>
+            <p>Local server and client connection tools.</p>
+          </div>
+          <div class="utility-nav">
+            <button class="button" data-view="settings">Settings</button>
+            <button class="button" data-view="endpoints">Endpoints</button>
+            <button class="button" data-view="logs">Logs</button>
+          </div>
+          <div class="utility-actions">
+            <button class="button" id="patchButton">Apply redirect</button>
+            <button class="button" id="restoreButton">Restore original</button>
+            <label class="switch-row">
+              <input type="checkbox" id="autoRedirect" />
+              Automatic redirect
+            </label>
+          </div>
+          <div class="card-grid">
+            <article class="card">
+              <div class="card-heading">
+                <span data-icon="server"></span>
+                <h3>Emulator server</h3>
+              </div>
+              <dl class="facts">
+                <div>
+                  <dt>Status</dt>
+                  <dd id="serverState">Offline</dd>
+                </div>
+                <div>
+                  <dt>Lobby</dt>
+                  <dd id="serverLobby">127.0.0.1:8080</dd>
+                </div>
+                <div>
+                  <dt>World (prototype)</dt>
+                  <dd id="serverWorld">127.0.0.1:8081</dd>
+                </div>
+                <div>
+                  <dt>Account</dt>
+                  <dd id="serverAccount">localdev</dd>
+                </div>
+                <div>
+                  <dt>Process</dt>
+                  <dd id="serverPid">—</dd>
+                </div>
+              </dl>
+              <div class="card-actions">
+                <button class="button small" id="startServerButton">Start server</button>
+                <button class="button small ghost" id="stopServerButton">Stop</button>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card-heading">
+                <span data-icon="monitor"></span>
+                <h3>Game client</h3>
+              </div>
+              <dl class="facts">
+                <div>
+                  <dt>Status</dt>
+                  <dd id="clientState">Not running</dd>
+                </div>
+                <div>
+                  <dt>Process</dt>
+                  <dd id="clientPid">—</dd>
+                </div>
+                <div>
+                  <dt>Region</dt>
+                  <dd id="clientRegion">—</dd>
+                </div>
+                <div>
+                  <dt>Manager</dt>
+                  <dd class="mono" id="clientManager">—</dd>
+                </div>
+              </dl>
+              <div class="card-actions">
+                <button class="button small" id="launchButton">Launch via Steam</button>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card-heading">
+                <span data-icon="route"></span>
+                <h3>Redirect session</h3>
+              </div>
+              <dl class="facts">
+                <div>
+                  <dt>State</dt>
+                  <dd id="redirectState">Idle</dd>
+                </div>
+                <div>
+                  <dt>Strings patched</dt>
+                  <dd id="redirectCount">0</dd>
+                </div>
+                <div>
+                  <dt>Target</dt>
+                  <dd id="redirectTarget">http://127.0.0.1:8080</dd>
+                </div>
+              </dl>
+              <p class="card-note" id="redirectDetail">Waiting for the client.</p>
+            </article>
+            <article class="card">
+              <div class="card-heading">
+                <span data-icon="monitor"></span>
+                <h3>World entry</h3>
+              </div>
+              <p class="card-note" id="worldEntryState">Waiting for client and server</p>
+            </article>
+          </div>
+
+          <article class="card activity-card">
+            <div class="card-heading">
+              <span data-icon="terminal"></span>
+              <h3>Activity</h3>
+            </div>
+            <div class="activity" id="activityList"></div>
+          </article>
+        </section>
+        <section class="view content-view development-only" id="view-endpoints">
+          <article class="card">
+            <div class="card-heading">
+              <span data-icon="route"></span>
+              <h3>Client region endpoints</h3>
+            </div>
+            <p class="card-note">
+              Values are read from the running client. The launcher rewrites only the strings listed
+              here, in memory, and keeps the original bytes for restore.
+            </p>
+            <table class="endpoint-table">
+              <thead>
+                <tr>
+                  <th>Region</th>
+                  <th>Auth address</th>
+                  <th>State</th>
+                </tr>
+              </thead>
+              <tbody id="endpointRows"></tbody>
+            </table>
+            <dl class="facts current-address">
+              <div>
+                <dt>Current auth address</dt>
+                <dd class="mono" id="currentAddress">—</dd>
+              </div>
+            </dl>
+          </article>
+        </section>
+
+        <section class="view content-view development-only" id="view-logs">
+          <article class="card">
+            <div class="card-heading">
+              <span data-icon="terminal"></span>
+              <h3>Server output</h3>
+            </div>
+            <pre class="log" id="serverLog">No server output yet.</pre>
+          </article>
+          <article class="card">
+            <div class="card-heading">
+              <span data-icon="terminal"></span>
+              <h3>Launcher activity</h3>
+            </div>
+            <pre class="log" id="activityLog"></pre>
+          </article>
+          <article class="card">
+            <div class="card-heading">
+              <span data-icon="terminal"></span>
+              <h3>World entry helper</h3>
+            </div>
+            <pre class="log" id="worldEntryLog">No world entry trial yet.</pre>
+          </article>
+        </section>
+
+        <section class="view content-view" id="view-settings">
+          <form class="card settings-form" id="settingsForm">
+            <div class="card-heading">
+              <span data-icon="sliders"></span>
+              <h3>Game settings</h3>
+            </div>
+            <div class="utility-nav development-only">
+              <button class="button" type="button" data-view="tools">Diagnostics</button>
+              <button class="button" type="button" data-view="logs">Activity logs</button>
+            </div>
+            <p class="card-note development-only">
+              Saved under
+              <span class="mono">Emulator/out/launcher/settings.json</span>
+              . Passwords and session tokens are never stored.
+            </p>
+
+            <div class="utility-actions" id="gameUpdateActions">
+              <button class="button" type="button" id="checkUpdatesButton">Check game files</button>
+              <button class="button" type="button" id="updateGameButton">
+                Verify / repair game files
+              </button>
+            </div>
+            <div class="form-grid">
+              <label class="field wide">
+                <span>Game folder</span>
+                <input name="game_directory" type="text" />
+                <button class="button" type="button" id="browseGameFolder">Choose folder…</button>
+                <small id="existingGameStatus">Project Chronicles prepares the game automatically.</small>
+              </label>
+            </div>
+            <div class="form-grid development-only">
+              <label class="field wide">
+                <span>Server API origin</span>
+                <input name="server_url" type="text" placeholder="http://127.0.0.1:8480" />
+              </label>
+              <label class="field wide">
+                <span>Patch signing public key (pinned by distribution builds)</span>
+                <input name="patch_public_key" type="text" maxlength="64" spellcheck="false" />
+              </label>
+              <label class="field">
+                <span>Patch channel</span>
+                <input name="patch_channel" type="text" maxlength="32" />
+              </label>
+              <label class="field">
+                <span>Steam app ID</span>
+                <input name="steam_app_id" type="text" />
+              </label>
+              <label class="field">
+                <span>Client region</span>
+                <input name="region" type="text" />
+              </label>
+              <label class="field wide">
+                <span>PlaySharp bridge executable</span>
+                <input name="bridge_executable" type="text" />
+              </label>
+              <label class="field wide">
+                <span>OpenSSL executable</span>
+                <input name="openssl_executable" type="text" />
+              </label>
+              <label class="field">
+                <span>Memory backend</span>
+                <select name="backend_mode">
+                  <option value="playsharp">playsharp (kernel)</option>
+                  <option value="usermode">usermode</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Account name</span>
+                <input name="account" type="text" autocomplete="username" />
+              </label>
+              <label class="field">
+                <span>Launch mode</span>
+                <select name="launch_mode">
+                  <option value="named_account">Named account (persistent server)</option>
+                  <option value="disposable">Disposable local test</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Client launch target</span>
+                <select name="client_launch_target">
+                  <option value="steam">Steam installation</option>
+                  <option value="private_copy">Guarded private copy</option>
+                  <option value="managed">Managed distribution</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Lobby HTTP port</span>
+                <input name="http_port" type="number" min="1" max="65535" />
+              </label>
+              <label class="field">
+                <span>World TLS port</span>
+                <input name="world_port" type="number" min="1" max="65535" />
+              </label>
+            </div>
+
+            <div class="toggle-grid development-only">
+              <label class="switch-row">
+                <span>Start disposable server when the launcher opens</span>
+                <span class="switch">
+                  <input type="checkbox" name="auto_start_server" />
+                  <span></span>
+                </span>
+              </label>
+              <label class="switch-row">
+                <span>Redirect the client automatically</span>
+                <span class="switch">
+                  <input type="checkbox" name="auto_redirect" />
+                  <span></span>
+                </span>
+              </label>
+              <label class="switch-row">
+                <span>Arm local world entry automatically (temporary client diagnostic)</span>
+                <span class="switch">
+                  <input type="checkbox" name="auto_world_entry" />
+                  <span></span>
+                </span>
+              </label>
+              <label class="switch-row">
+                <span>Enable prototype TLS world listener</span>
+                <span class="switch">
+                  <input type="checkbox" name="world_enabled" />
+                  <span></span>
+                </span>
+              </label>
+              <label class="switch-row">
+                <span>Restore endpoints when the launcher closes</span>
+                <span class="switch">
+                  <input type="checkbox" name="restore_on_exit" />
+                  <span></span>
+                </span>
+              </label>
+              <label class="switch-row">
+                <span>Stop the server when the launcher closes</span>
+                <span class="switch">
+                  <input type="checkbox" name="stop_server_on_exit" />
+                  <span></span>
+                </span>
+              </label>
+            </div>
+
+            <div class="form-actions">
+              <button class="button primary" type="submit" id="saveSettingsButton">
+                Save settings
+              </button>
+              <span class="form-note development-only">
+                Port, region and backend changes take effect on the next server start / redirect.
+              </span>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+    <dialog class="account-dialog" id="accountDialog" aria-labelledby="accountTitle">
+      <button class="dialog-close icon-button" id="closeAccountButton" aria-label="Close sign in">
+        ×
+      </button>
+      <p class="eyebrow" id="accountEyebrow">WELCOME, ADVENTURER</p>
+      <h2 id="accountTitle">Begin your journey</h2>
+      <p class="dialog-description" id="accountDescription">Sign in to your Project Chronicles account.</p>
+      <p class="account-feedback" id="accountError" role="alert" hidden></p>
+      <p class="account-notice" id="accountNotice" role="status" hidden></p>
+      <p class="account-hint" id="accountHint" hidden></p>
+      <form id="accountForm">
+        <label class="field">
+          <span>Account name</span>
+          <input
+            id="launchAccount"
+            autofocus
+            type="text"
+            autocomplete="username"
+            required
+            maxlength="32"
+            minlength="3"
+            spellcheck="false"
+          />
+        </label>
+        <label class="field" id="launchPasswordRow">
+          <span>Password</span>
+          <span class="password-control">
+            <input
+              id="launchPassword"
+              aria-label="Password"
+              maxlength="256"
+              type="password"
+              autocomplete="off"
+              required
+            />
+            <button
+              type="button"
+              id="togglePasswordButton"
+              aria-label="Show password"
+              aria-pressed="false"
+            >
+              Show
+            </button>
+          </span>
+        </label>
+        <label class="field" id="confirmPasswordRow" hidden>
+          <span>Confirm password</span>
+          <input id="confirmPassword" type="password" autocomplete="off" maxlength="256" />
+        </label>
+        <fieldset class="login-options" id="loginOptions">
+          <label>
+            <input type="checkbox" id="keepSignedIn" checked />
+            Keep me signed in on this PC
+          </label>
+          <span class="login-storage-note">
+            Saved securely in Windows Credential Manager. Password sign-in also saves your password.
+          </span>
+        </fieldset>
+        <button class="button primary sign-in-button" type="submit" id="signInButton">
+          <span class="account-spinner" id="accountSpinner" aria-hidden="true" hidden></span>
+          <span id="signInLabel">SIGN IN</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </form>
+      <button class="text-button account-settings" id="accountModeButton">
+        New to Project Chronicles? Create account
+      </button>
+      <button class="button discord-sign-in" id="discordSignInButton" type="button">
+        Continue with Discord
+      </button>
+      <p class="discord-unavailable" id="discordUnavailable" hidden>
+        Discord sign-in is unavailable on this server.
+      </p>
+      <button class="text-button account-settings" id="cancelDiscordButton" hidden>
+        Cancel Discord sign-in
+      </button>
+      <div class="account-session-panel" id="accountSessionPanel" hidden>
+        <div class="account-avatar" id="accountAvatar" aria-hidden="true">A</div>
+        <strong id="authenticatedName"></strong>
+        <span class="account-session-status" id="accountSessionStatus"></span>
+        <button class="button primary sign-in-button" id="accountPlayButton">
+          PLAY CHRONICLES
+          <span aria-hidden="true">→</span>
+        </button>
+        <button class="button account-sign-out" id="signOutButton">Sign out</button>
+      </div>
+      <button class="text-button forget-login" id="forgetSavedLoginButton" hidden>
+        Forget saved login
+      </button>
+    </dialog>
+    <dialog class="article-dialog" id="articleDialog" aria-labelledby="articleTitle">
+      <button class="dialog-close icon-button" id="closeArticleButton" aria-label="Close article">
+        ×
+      </button>
+      <div class="article-image" id="articleImage"></div>
+      <div class="article-body">
+        <p class="eyebrow" id="articleCategory"></p>
+        <h2 id="articleTitle"></h2>
+        <p class="article-date" id="articleDate"></p>
+        <p id="articleText"></p>
+        <button class="button" id="articleAction">Back to news</button>
+      </div>
+    </dialog>
+    <div class="toast" id="toast" role="alert"></div>
+    <script src="app.js?v=11"></script>
+    <script src="portal.js?v=1"></script>
+  </body>
+</html>
