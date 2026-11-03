@@ -1,0 +1,14 @@
+{
+  "edition": "player",
+  "servers": [
+    {
+      "id": "local",
+      "name": "Project Chronicles - Local",
+      "server_url": "http://127.0.0.1:8080",
+      "patch_public_key": "",
+      "patch_channel": "stable",
+      "world_host": "127.0.0.1",
+      "world_port": 8081
+    }
+  ]
+}
