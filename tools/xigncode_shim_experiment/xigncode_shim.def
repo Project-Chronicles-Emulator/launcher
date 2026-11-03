@@ -1,0 +1,8 @@
+LIBRARY x3_x64.xem
+
+EXPORTS
+    X3ResolveOrdinal1 @1 NONAME
+    X3FailStub2 @2 NONAME
+    X3FailStub3 @3 NONAME
+    X3ResolveOrdinal4 @4 NONAME
+    X3Ordinal99ZeroPage @99 NONAME DATA
