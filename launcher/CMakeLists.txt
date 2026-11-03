@@ -46,6 +46,7 @@ target_compile_definitions(chronicles-launcher-core PUBLIC JM_XORSTR_DISABLE_AVX
 target_link_libraries(chronicles-launcher-core PUBLIC
   chronicles-launcher-memory
   Boost::asio
+  Boost::beast
   nlohmann_json::nlohmann_json
   unofficial::webview2::webview2
   chronicles-distribution
