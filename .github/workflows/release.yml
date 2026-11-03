@@ -6,7 +6,7 @@ on:
       tag:
         description: New preview release tag
         required: true
-        default: v0.1.0-preview.1
+        default: v0.1.0-preview.2
         type: string
 
 permissions:
@@ -44,10 +44,18 @@ jobs:
       - name: Build
         run: |
           . ./tools/dev_shell.ps1
-          cmake --preset windows "-DCMAKE_TOOLCHAIN_FILE=$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake" -DBUILD_TESTING=OFF
+          cmake --preset windows "-DCMAKE_TOOLCHAIN_FILE=$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake" -DBUILD_TESTING=ON
           if ($LASTEXITCODE -ne 0) { throw 'CMake configure failed' }
-          cmake --build --preset release --target chronicles-launcher --parallel 2
+          cmake --build --preset release --target chronicles-launcher chronicles-launcher-tests chronicles-world-tls-tests --parallel 2
           if ($LASTEXITCODE -ne 0) { throw 'CMake build failed' }
+      - name: Verify local setup and world helper contracts
+        run: |
+          python -m unittest discover -s tests -v
+          if ($LASTEXITCODE -ne 0) { throw 'Local setup tests failed' }
+          & ./out/build/windows/bin/Release/launcher/chronicles-launcher-tests.exe '--gtest_filter=ReleaseSetupTest.*'
+          if ($LASTEXITCODE -ne 0) { throw 'Launcher release setup tests failed' }
+          & ./out/build/windows/bin/Release/launcher/chronicles-world-tls-tests.exe
+          if ($LASTEXITCODE -ne 0) { throw 'World identity tests failed' }
       - name: Package redistributable files
         run: ./tools/package_release.ps1
       - uses: actions/upload-artifact@v4

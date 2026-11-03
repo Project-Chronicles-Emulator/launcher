@@ -726,7 +726,8 @@ std::filesystem::path LauncherController::prepare_named_bootstrap(const std::str
   auto bootstrap_url = account_session_.launch_url();
   SecretClear clear_bootstrap_url{bootstrap_url};
 
-  if (distribution_profile_ || !distribution::parse_service_origin(base_url).loopback) {
+  if (!settings_.patch_public_key.empty() ||
+      !distribution::parse_service_origin(base_url).loopback) {
     if (!patch_release_ || !patch_release_->bootstrap) {
       throw std::runtime_error("The signed release does not contain a client bootstrap template");
     }

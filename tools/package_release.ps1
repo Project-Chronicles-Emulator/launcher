@@ -28,6 +28,11 @@ Get-ChildItem -LiteralPath $binary -Filter '*.dll' -File | Copy-Item -Destinatio
 Copy-Required 'launcher/web'
 Copy-Required 'launcher/resources'
 Copy-Required 'config/launcher.local.example.json' "$package/launcher-config.json"
+New-Item -ItemType Directory -Path "$package/tools/xigncode_shim_experiment" -Force | Out-Null
+foreach ($name in @('prepare_local_client.py', 'binary_config_codec.py', 'launch_private_client.ps1', 'private_client_firewall.ps1')) {
+    Copy-Required "tools/$name" "$package/tools"
+}
+Copy-Required 'tools/xigncode_shim_experiment/install_private_shim.ps1' "$package/tools/xigncode_shim_experiment"
 
 Copy-Required 'README.md'
 if (Test-Path -LiteralPath 'LICENSE') {

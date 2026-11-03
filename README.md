@@ -25,6 +25,9 @@ DLLs and web assets together.
 
 First complete the [shared environment setup](https://github.com/Project-Chronicles-Emulator/game-server/blob/main/docs/guides/getting-started.md).
 It covers database installation, service keys, world TLS and startup order.
+Before starting a local client, follow the [bootstrap preparation steps](https://github.com/Project-Chronicles-Emulator/game-server/blob/main/docs/guides/preview-packages.md#3-launcher)
+using `tools/prepare_local_client.py`, your own extracted config and the world public certificate.
+The server also needs its generated catalog and tutorial profile for stats and skills.
 
 ```powershell
 .\out\build\windows\bin\Release\launcher\chronicles-launcher.exe
@@ -44,8 +47,8 @@ Read the [architecture](https://github.com/Project-Chronicles-Emulator/game-serv
 [feature/bug workflow](https://github.com/Project-Chronicles-Emulator/game-server/blob/main/docs/guides/feature-workflow.md) and
 [testing guide](https://github.com/Project-Chronicles-Emulator/game-server/blob/main/docs/guides/testing.md). Report the exact component, commit,
 reproduction and redacted evidence. Build/synthetic checks and original-client
-observations are distinct; the service split has not had a fresh original-client
-gameplay acceptance trial. Keep local credentials and generated/client files out of commits.
+observations are distinct. The 2026-11-03 local split-service trial reached the tutorial
+with the researched compatible private client; other builds and full gameplay remain unverified. Keep local credentials and generated/client files out of commits.
 
 ## Preview downloads and reproducible releases
 

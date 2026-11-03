@@ -247,14 +247,24 @@ bool apply_distribution_profile(LauncherSettings &settings,
     }
   }
   configured.launch_mode = "named_account";
-  configured.client_launch_target = "managed";
+  const bool unsigned_local =
+      distribution::parse_service_origin(configured.server_url).loopback &&
+      configured.patch_public_key.empty();
+  if (unsigned_local) {
+    configured.http_port = distribution::parse_service_origin(configured.server_url).port;
+  }
+  if (!unsigned_local) {
+    configured.client_launch_target = "managed";
+  } else if (configured.client_launch_target == "managed") {
+    configured.client_launch_target = "steam";
+  }
   configured.backend_mode = "usermode";
   configured.bridge_executable.clear();
   if (configured.account == "localdev") {
     configured.account.clear();
   }
   configured.auto_start_server = false;
-  configured.auto_redirect = false;
+  configured.auto_redirect = unsigned_local;
   configured.auto_world_entry = !servers.empty();
   configured.restore_on_exit = false;
   configured.stop_server_on_exit = false;

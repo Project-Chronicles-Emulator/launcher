@@ -6,7 +6,7 @@ param(
     [string]$Action,
     [Parameter(Mandatory)]
     [string]$PrivateRoot,
-    [string]$Source = 'E:\SteamLibrary\steamapps\common\ArcheAge Chronicles Demo',
+    [string]$Source,
     [string]$ShimPath = (Join-Path $PSScriptRoot '..\..\out\xigncode-shim\Release\x3_x64.xem')
 )
 
@@ -97,6 +97,16 @@ function Write-State {
 }
 
 $privatePath = Get-AbsolutePath $PrivateRoot
+if (-not $Source) {
+    $marker = Join-Path $privatePath $markerName
+    if (-not (Test-Path -LiteralPath $marker -PathType Leaf)) {
+        throw 'Supply -Source or an existing private-client marker.'
+    }
+    $Source = (Get-Content -LiteralPath $marker -Raw | ConvertFrom-Json).source
+    if (-not $Source) {
+        throw 'The private-client marker does not identify its source.'
+    }
+}
 $sourcePath = Get-AbsolutePath $Source
 $shimFile = Get-AbsolutePath $ShimPath
 $modulePath = Get-AbsolutePath (Join-Path $privatePath $moduleRelativePath)
@@ -146,9 +156,12 @@ if (-not $clientEntry.sha256.Equals($manifest.client_executable_sha256,
 }
 
 Assert-Hash $privateClientPath $manifest.client_executable_sha256
-Assert-Hash $sourceModulePath $moduleEntry.sha256
 
 if ($Action -eq 'Install') {
+    # Installation checks the source snapshot. Status/restore validate the private
+    # executable, original backup and installed module below; Steam may update its
+    # separate source installation without invalidating this existing private copy.
+    Assert-Hash $sourceModulePath $moduleEntry.sha256
     if (Test-Path -LiteralPath $statePath) {
         throw 'A shim state record already exists; inspect Status or Restore first'
     }

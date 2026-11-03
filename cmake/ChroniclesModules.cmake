@@ -90,7 +90,6 @@ function(chronicles_add_module_tests folder)
     ${extra_targets}
     ${tests_LIBRARIES}
     nlohmann_json::nlohmann_json
-    spdlog::spdlog
     GTest::gtest_main
   )
   target_compile_definitions(${target} PRIVATE

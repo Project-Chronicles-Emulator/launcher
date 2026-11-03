@@ -140,8 +140,39 @@ TEST_F(ReleaseSetupTest, DefaultCatalogSelectsOnlyTheLocalServer) {
   EXPECT_EQ(settings.server_url, "http://127.0.0.1:8080");
   EXPECT_EQ(settings.world_host, "127.0.0.1");
   EXPECT_EQ(settings.world_port, 8081);
-  EXPECT_EQ(settings.client_launch_target, "managed");
+  EXPECT_EQ(settings.client_launch_target, "steam");
+  EXPECT_TRUE(settings.auto_redirect);
   EXPECT_TRUE(settings.auto_world_entry);
+}
+
+TEST_F(ReleaseSetupTest, UnsignedLocalCatalogPreservesAnExplicitPrivateClient) {
+  edition("player");
+  {
+    std::ofstream profile(root_ / "launcher-config.json");
+    profile << R"({"edition":"player","servers":[{"id":"local","name":"Local test","server_url":"http://127.0.0.1:18080","world_port":18081}]})";
+  }
+  LauncherSettings settings;
+  settings.client_launch_target = "private_copy";
+
+  ASSERT_TRUE(apply_distribution_profile(settings, root_));
+  EXPECT_EQ(settings.client_launch_target, "private_copy");
+  EXPECT_EQ(settings.launch_mode, "named_account");
+  EXPECT_EQ(settings.http_port, 18080);
+  EXPECT_EQ(settings.world_port, 18081);
+  EXPECT_TRUE(settings.auto_redirect);
+  EXPECT_FALSE(settings.auto_start_server);
+}
+
+TEST_F(ReleaseSetupTest, HostedCatalogKeepsSignedManagedDistribution) {
+  edition("operator");
+  LauncherSettings settings;
+  settings.server_id = "live-na";
+  settings.client_launch_target = "private_copy";
+
+  ASSERT_TRUE(apply_distribution_profile(settings, root_));
+  EXPECT_EQ(settings.client_launch_target, "managed");
+  EXPECT_FALSE(settings.patch_public_key.empty());
+  EXPECT_FALSE(settings.auto_redirect);
 }
 
 TEST_F(ReleaseSetupTest, HostedCatalogRequiresAnExplicitSigningKeyAndValidWorldPort) {
